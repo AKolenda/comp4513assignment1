@@ -191,7 +191,7 @@ app.get("/api/paintings/years/:start/:end", async (req, resp) => {
     )
     .gte("yearOfWork", start)
     .lte("yearOfWork", end)
-    .order("title", { ascending: true });
+    .order("yearOfWork", { ascending: true });
 
   if (error) return defaultError(error, resp);
   resp.send(data);
