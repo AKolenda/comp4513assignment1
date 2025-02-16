@@ -328,8 +328,31 @@ app.get("/api/paintings/genre/:ref", async (req, resp) => {
       WHERE pg."genreId" = $1
       ORDER BY p."yearOfWork" ASC;
     `,
-    params: [params]
+    params: [params],
   });
+
+  if (error) return defaultError(error, resp);
+  resp.send(data);
+});
+
+// returns the paintings for a given era, sorted by yearOfWork
+app.get("/api/paintings/era/:ref", async (req, resp) => {
+  const params = req.params.ref.toLowerCase();
+  const { data, error } = await supabase
+    .from("PaintingGenres")
+    .select(
+      `
+
+        Paintings!inner(
+          paintingId,
+          title,
+          yearOfWork
+        ),
+        Genres!inner(eraId)
+      `
+    )
+    .eq("Genres.eraId", params)
+    .order("Paintings(yearOfWork)", { ascending: true });
 
   if (error) return defaultError(error, resp);
   resp.send(data);
