@@ -312,7 +312,7 @@ app.get("/api/genres/painting/:ref", async (req, resp) => {
 app.get("/api/paintings/genre/:ref", async (req, resp) => {
   const params = req.params.ref.toLowerCase();
 
-  if (isNaN(param)) {
+  if (isNaN(params)) {
     return resp.status(400).json({
       error: true,
       message: "parameter MUST BE A NUMBER",
@@ -325,10 +325,9 @@ app.get("/api/paintings/genre/:ref", async (req, resp) => {
       SELECT DISTINCT p."paintingId", p."title", p."yearOfWork"
       FROM "Paintings" p
       JOIN "PaintingGenres" pg ON p."paintingId" = pg."paintingId"
-      WHERE pg."genreId" = $1
+      WHERE pg."genreId" = ${params}
       ORDER BY p."yearOfWork" ASC;
     `,
-    params: [params],
   });
 
   if (error) return defaultError(error, resp);
