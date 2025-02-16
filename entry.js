@@ -325,9 +325,10 @@ app.get("/api/paintings/genre/:ref", async (req, resp) => {
       SELECT DISTINCT p."paintingId", p."title", p."yearOfWork"
       FROM "Paintings" p
       JOIN "PaintingGenres" pg ON p."paintingId" = pg."paintingId"
-      WHERE pg."genreId" = ${params}
+      WHERE pg."genreId" = $1
       ORDER BY p."yearOfWork" ASC;
     `,
+    params: [params]
   });
 
   if (error) return defaultError(error, resp);
